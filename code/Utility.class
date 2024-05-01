@@ -1,0 +1,42 @@
+import java.util.*;
+
+public class Utility {
+    public static void main(String[] args) {
+        // Create a list of random numbers and sort it
+        List<Integer> numbers = new ArrayList<>();
+        for (int i = 0; i < 50; i++) {
+            numbers.add((int) (Math.random() * 100));
+        }
+        Collections.sort(numbers);
+        System.out.println("Sorted Numbers: " + numbers);
+
+        // Map to store frequency of each number
+        Map<Integer, Integer> frequencyMap = new HashMap<>();
+        for (int number : numbers) {
+            frequencyMap.put(number, frequencyMap.getOrDefault(number, 0) + 1);
+        }
+        System.out.println("Frequency of each number: " + frequencyMap);
+
+        // Generate random words and print
+        String[] words = {"examine", "construction", "particular", "observe", "random", "example", "vehicle", "electricity", "mechanism", "heritage"};
+        for (String word : words) {
+            System.out.println("Word: " + word);
+        }
+
+        // Display current date and time
+        System.out.println("Current date and time: " + new Date().toString());
+
+        // Compute factorial of a number using recursion
+        System.out.println("Factorial of 10: " + factorial(10));
+    }
+
+    // Method to compute factorial of a number
+    public static int factorial(int n) {
+        if (n == 0) {
+            return 1;
+        } else {
+            return n * factorial(n - 1);
+        }
+    }
+}
+
