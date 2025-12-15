@@ -4,43 +4,63 @@
 # echo $BASH_VERSION
 declare -A args
 
-# output_file=$(uuidgen | tr -d '-')
-# dd if=/dev/urandom of=$output_file bs=10M count=1
+DEFAULT_BS="10k"
+DEFAULT_COUNT=1
+
 
 generate_filename() {
     echo $(uuidgen | tr -d '-')
 }
 
+
 script_main() {
-    # dd if=/dev/urandom of=$1 bs=$2 count=1
-    echo "script_main"
+    # echo "script_main of=${args[of]} bs=${args[bs]} count=${args[count]}"
+    # dd if=/dev/urandom of=${args[of]} bs={args[bs]} count=${args[count]}
+    echo "Created ${args[of]}"
 }
 
-# TODO: catch when flag value not provided
-#       - processing args; len: 1, [-o]
-#       ./create-binary-garbage.sh: option requires an argument -- o  <== CATCH THIS?!?
-#       unknown flag 
-#       - - of: 
 
+# sets values in global `args` for use elsewhere
 process_args() {
-    echo "- processing args; len: $#, [$@]"
-    args['_ALL']=$*
+    # echo "- processing args; len: $#, [$@]"
+    # echo "- - args: ${args[@]}"
+
+    # args['_ALL']="<<$*>>"
     while getopts "o:s:c:" flag;
     do
         case $flag in 
             o) args[of]=$OPTARG ;;
             s) args[bs]=$OPTARG ;;
             c) args[count]=$OPTARG ;;
-            \?) echo "unknown flag $OPTARG" ;;
+            \?) echo "unknown flag $OPTARG"; exit 1 ;;
         esac
     done
 
-    echo "- - of: ${args[of]}"
-    echo "- - bs: ${args[bs]}"
-    echo "- -  c: ${args[count]}"
+    # echo "- - of: ${args[of]}"
+    # echo "- - bs: ${args[bs]}"
+    # echo "- -  c: ${args[count]}"
+    # echo "- args: ${args[@]}"
 
 
     echo "- - substituting defaults appropriately"
+    # TODO: better output here would be nice. these are really debug/dev logs
     if [[ -z ${args[of]} ]]; then
         args[of]=$(generate_filename)
+        echo "- - default of: ${args[of]}"
     fi
+    if [[ -z ${args[bs]} ]]; then
+        args[bs]=$DEFAULT_BS
+        echo "- - default bs: ${args[bs]}"
+    fi
+    if [[ -z ${args[count]} ]]; then
+        args[count]=$DEFAULT_COUNT
+        echo "- - default count: ${args[count]}"
+    fi
+    # echo "- - args: ${args[@]}"
+    # echo "- finished processing args"
+}
+
+
+process_args $@
+script_main ${args[@]}
+
